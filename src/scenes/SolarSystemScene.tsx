@@ -1,7 +1,11 @@
 import { Html, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import { SpinningSphere } from "../components/celestial/SpinningSphere";
+import { Planet } from "../components/celestial/Planet";
+import { getCelestialBodyById } from "../data/celestialBodies";
+
+const featuredBody = getCelestialBodyById("earth");
+const FEATURED_BODY_DISPLAY_RADIUS = 1.5;
 
 function LoadingFallback() {
   return (
@@ -14,6 +18,10 @@ function LoadingFallback() {
 }
 
 export function SolarSystemScene() {
+  if (!featuredBody) {
+    return null;
+  }
+
   return (
     <Canvas
       camera={{
@@ -40,7 +48,10 @@ export function SolarSystemScene() {
       />
 
       <Suspense fallback={<LoadingFallback />}>
-        <SpinningSphere />
+        <Planet
+          body={featuredBody}
+          visualScale={FEATURED_BODY_DISPLAY_RADIUS / featuredBody.radiusKm}
+        />
       </Suspense>
 
       <OrbitControls

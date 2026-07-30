@@ -1,0 +1,86 @@
+[
+  {
+    "id": "sun",
+    "name": "Sun",
+    "kind": "star",
+    "radiusKm": 695700,
+    "distanceFromSunKm": null,
+    "orbitalPeriodDays": null,
+    "rotationPeriodHours": 609.12,
+    "textureUrl": null,
+    "color": "#F6B73C",
+    "description": "The G-type star whose light and gravity dominate the solar system."
+  },
+  {
+    "id": "mercury",
+    "name": "Mercury",
+    "kind": "planet",
+    "radiusKm": 2439.4,
+    "distanceFromSunKm": 57909000,
+    "orbitalPeriodDays": 87.969,
+    "rotationPeriodHours": 1407.509,
+    "textureUrl": null,
+    "color": "#8F8983",
+    "description": "A small, cratered world and the closest planet to the Sun."
+  },
+  {
+    "id": "venus",
+    "name": "Venus",
+    "kind": "planet",
+    "radiusKm": 6051.8,
+    "distanceFromSunKm": 108210000,
+    "orbitalPeriodDays": 224.701,
+    "rotationPeriodHours": -5832.432,
+    "textureUrl": null,
+    "color": "#D7A968",
+    "description": "A cloud-covered rocky planet with a hot surface and retrograde rotation."
+  },
+  {
+    "id": "earth",
+    "name": "Earth",
+    "kind": "planet",
+    "radiusKm": 6371.0084,
+    "distanceFromSunKm": 149598000,
+    "orbitalPeriodDays": 365.256,
+    "rotationPeriodHours": 23.9345,
+    "textureUrl": "../assets/earth-blue-marble.jpg",
+    "color": "#3F6F9D",
+    "description": "An ocean-covered rocky planet and the only world known to support life."
+  },
+  {
+    "id": "mars",
+    "name": "Mars",
+    "kind": "planet",
+    "radiusKm": 3389.5,
+    "distanceFromSunKm": 227956000,
+    "orbitalPeriodDays": 686.98,
+    "rotationPeriodHours": 24.6229,
+    "textureUrl": null,
+    "color": "#A55332",
+    "description": "A cold desert world shaped by iron-rich dust, volcanoes, and ancient water."
+  },
+  {
+    "id": "jupiter",
+    "name": "Jupiter",
+    "kind": "planet",
+    "radiusKm": 69911,
+    "distanceFromSunKm": 778479000,
+    "orbitalPeriodDays": 4332.589,
+    "rotationPeriodHours": 9.92496,
+    "textureUrl": null,
+    "color": "#C49A72",
+    "description": "The solar system's largest planet, a rapidly rotating gas giant."
+  },
+  {
+    "id": "saturn",
+    "name": "Saturn",
+    "kind": "planet",
+    "radiusKm": 58232,
+    "distanceFromSunKm": 1433529000,
+    "orbitalPeriodDays": 10755.699,
+    "rotationPeriodHours": 10.656,
+    "textureUrl": null,
+    "color": "#D8C18F",
+    "description": "A gas giant distinguished by its broad and intricate ring system."
+  }
+]
