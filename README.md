@@ -15,7 +15,7 @@ pnpm dev
 pnpm build
 ```
 
-## Texture asset
+## Texture assets
 
 `src/assets/earth-blue-marble.jpg` is NASA's 2048 × 1024 equirectangular
 projected Earth imagery, designed to wrap around a sphere.
@@ -23,6 +23,11 @@ projected Earth imagery, designed to wrap around a sphere.
 Source: [NASA/Goddard Space Flight Center Scientific Visualization Studio](https://svs.gsfc.nasa.gov/3615/).
 Blue Marble Next Generation data courtesy of Reto Stöckli (NASA/GSFC) and
 NASA's Earth Observatory.
+
+The Sun, Mercury, Venus, Mars, Jupiter, Saturn, and Saturn's transparent ring
+map use locally stored 2K equirectangular textures from Solar System Scope,
+distributed under CC BY 4.0. See [CREDITS.md](./CREDITS.md) for the complete
+asset list, source links, licence, and attribution.
 
 ## Celestial-body data
 
@@ -34,11 +39,20 @@ rotation.
 
 `distanceFromSunKm` is nullable because the value does not meaningfully apply
 to the Sun. A `null` `textureUrl` means that no local texture has been assigned
-and the renderer should use the body's fallback `color`. Earth's JSON texture
-path is resolved through a static TypeScript import so Vite can fingerprint the
-existing local asset in production builds.
+and the renderer should use the body's fallback `color`. JSON texture paths are
+resolved through static TypeScript imports so Vite can fingerprint every local
+asset in production builds. Optional `rings` data defines reusable inner/outer
+radius multipliers, a transparent texture, and axial tilt.
 
 Sources:
 
 - [JPL Solar System Dynamics planetary physical parameters](https://ssd.jpl.nasa.gov/planets/phys_par.html)
 - [NASA Science: Sun Facts](https://science.nasa.gov/sun/facts/)
+
+## Visual scaling
+
+Scientific distances and radii use separate logarithmic display mappings in
+`src/lib/scale.ts`. Distances in kilometres map to orbit radii in scene units;
+mean radii in kilometres map independently to readable body radii. These
+display values are intentionally non-linear and are not a realistic scale
+conversion.
