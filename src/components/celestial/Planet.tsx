@@ -1,48 +1,34 @@
-import { useTexture } from "@react-three/drei";
 import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 import type { CelestialBody } from "../../data/celestialBodies";
+import { PlanetRings } from "./PlanetRings";
+import { useTextureAsset } from "./useTextureAsset";
 
 const DISPLAY_ROTATION_SPEED_RADIANS_PER_SECOND = 0.12;
 
 interface PlanetProps {
   body: CelestialBody;
+  displayRadius: number;
   position?: ThreeElements["mesh"]["position"];
-  visualScale?: number;
 }
 
 interface PlanetMaterialProps {
-  textureUrl: string | null;
-  color: CelestialBody["color"];
+  body: CelestialBody;
 }
 
-function TexturedPlanetMaterial({ textureUrl }: { textureUrl: string }) {
-  const texture = useTexture(textureUrl, (loadedTexture) => {
-    loadedTexture.colorSpace = THREE.SRGBColorSpace;
-    loadedTexture.needsUpdate = true;
-  });
+function PlanetMaterial({ body }: PlanetMaterialProps) {
+  const texture = useTextureAsset(body.textureUrl);
+  const isStar = body.kind === "star";
 
   return (
     <meshStandardMaterial
       map={texture}
-      roughness={0.82}
-      metalness={0.02}
-    />
-  );
-}
-
-function PlanetMaterial({
-  textureUrl,
-  color,
-}: PlanetMaterialProps) {
-  if (textureUrl) {
-    return <TexturedPlanetMaterial textureUrl={textureUrl} />;
-  }
-
-  return (
-    <meshStandardMaterial
-      color={color}
+      color={texture ? "#ffffff" : body.color}
+      emissive={isStar ? body.color : "#000000"}
+      emissiveMap={isStar ? texture : null}
+      emissiveIntensity={isStar ? 1.8 : 0}
+      toneMapped={!isStar}
       roughness={0.82}
       metalness={0.02}
     />
@@ -51,8 +37,8 @@ function PlanetMaterial({
 
 export function Planet({
   body,
+  displayRadius,
   position,
-  visualScale = 1,
 }: PlanetProps) {
   const planetRef = useRef<THREE.Mesh>(null);
 
@@ -64,15 +50,24 @@ export function Planet({
   });
 
   return (
-    <mesh
-      ref={planetRef}
-      name={body.name}
-      position={position}
-      rotation={[0.08, -0.35, -0.05]}
-      userData={{ celestialBodyId: body.id, bodyName: body.name, kind: body.kind }}
-    >
-      <sphereGeometry args={[body.radiusKm * visualScale, 64, 64]} />
-      <PlanetMaterial textureUrl={body.textureUrl} color={body.color} />
-    </mesh>
+    <group position={position}>
+      <mesh
+        ref={planetRef}
+        name={body.name}
+        rotation={[0.08, -0.35, -0.05]}
+        userData={{
+          celestialBodyId: body.id,
+          bodyName: body.name,
+          kind: body.kind,
+        }}
+      >
+        <sphereGeometry args={[displayRadius, 64, 64]} />
+        <PlanetMaterial body={body} />
+      </mesh>
+
+      {body.rings ? (
+        <PlanetRings bodyRadius={displayRadius} rings={body.rings} />
+      ) : null}
+    </group>
   );
 }

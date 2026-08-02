@@ -7,7 +7,7 @@
     "distanceFromSunKm": null,
     "orbitalPeriodDays": null,
     "rotationPeriodHours": 609.12,
-    "textureUrl": null,
+    "textureUrl": "../assets/textures/sun.jpg",
     "color": "#F6B73C",
     "description": "The G-type star whose light and gravity dominate the solar system."
   },
@@ -19,7 +19,7 @@
     "distanceFromSunKm": 57909000,
     "orbitalPeriodDays": 87.969,
     "rotationPeriodHours": 1407.509,
-    "textureUrl": null,
+    "textureUrl": "../assets/textures/mercury.jpg",
     "color": "#8F8983",
     "description": "A small, cratered world and the closest planet to the Sun."
   },
@@ -31,7 +31,7 @@
     "distanceFromSunKm": 108210000,
     "orbitalPeriodDays": 224.701,
     "rotationPeriodHours": -5832.432,
-    "textureUrl": null,
+    "textureUrl": "../assets/textures/venus.jpg",
     "color": "#D7A968",
     "description": "A cloud-covered rocky planet with a hot surface and retrograde rotation."
   },
@@ -55,7 +55,7 @@
     "distanceFromSunKm": 227956000,
     "orbitalPeriodDays": 686.98,
     "rotationPeriodHours": 24.6229,
-    "textureUrl": null,
+    "textureUrl": "../assets/textures/mars.jpg",
     "color": "#A55332",
     "description": "A cold desert world shaped by iron-rich dust, volcanoes, and ancient water."
   },
@@ -67,7 +67,7 @@
     "distanceFromSunKm": 778479000,
     "orbitalPeriodDays": 4332.589,
     "rotationPeriodHours": 9.92496,
-    "textureUrl": null,
+    "textureUrl": "../assets/textures/jupiter.jpg",
     "color": "#C49A72",
     "description": "The solar system's largest planet, a rapidly rotating gas giant."
   },
@@ -79,8 +79,14 @@
     "distanceFromSunKm": 1433529000,
     "orbitalPeriodDays": 10755.699,
     "rotationPeriodHours": 10.656,
-    "textureUrl": null,
+    "textureUrl": "../assets/textures/saturn.jpg",
     "color": "#D8C18F",
-    "description": "A gas giant distinguished by its broad and intricate ring system."
+    "description": "A gas giant distinguished by its broad and intricate ring system.",
+    "rings": {
+      "innerRadiusMultiplier": 1.25,
+      "outerRadiusMultiplier": 2.35,
+      "textureUrl": "../assets/textures/saturn-rings.png",
+      "tiltDegrees": 26.7
+    }
   }
 ]

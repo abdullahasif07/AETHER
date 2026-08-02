@@ -1,11 +1,39 @@
 import { Html, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
+import { OrbitLine } from "../components/celestial/OrbitLine";
 import { Planet } from "../components/celestial/Planet";
-import { getCelestialBodyById } from "../data/celestialBodies";
+import { celestialBodies } from "../data/celestialBodies";
+import {
+  scaleDistanceKmToSceneUnits,
+  scaleRadiusKmToSceneUnits,
+} from "../lib/scale";
 
-const featuredBody = getCelestialBodyById("earth");
-const FEATURED_BODY_DISPLAY_RADIUS = 1.5;
+const ORBIT_START_ANGLE_RADIANS = 0.35;
+const ORBIT_ANGLE_STEP_RADIANS = Math.PI * (3 - Math.sqrt(5));
+
+let nextOrbitIndex = 0;
+
+const sceneBodies = celestialBodies.map((body) => {
+  const orbitRadius = scaleDistanceKmToSceneUnits(body.distanceFromSunKm);
+  const orbitAngle = orbitRadius
+    ? ORBIT_START_ANGLE_RADIANS +
+      nextOrbitIndex++ * ORBIT_ANGLE_STEP_RADIANS
+    : 0;
+
+  return {
+    body,
+    displayRadius: scaleRadiusKmToSceneUnits(body.radiusKm),
+    orbitRadius,
+    position: [
+      Math.cos(orbitAngle) * orbitRadius,
+      0,
+      Math.sin(orbitAngle) * orbitRadius,
+    ] as [number, number, number],
+  };
+});
+
+const orbitingBodies = sceneBodies.filter(({ orbitRadius }) => orbitRadius > 0);
 
 function LoadingFallback() {
   return (
@@ -18,17 +46,13 @@ function LoadingFallback() {
 }
 
 export function SolarSystemScene() {
-  if (!featuredBody) {
-    return null;
-  }
-
   return (
     <Canvas
       camera={{
-        position: [0, 0, 4.5],
-        fov: 45,
+        position: [0, 20, 30],
+        fov: 50,
         near: 0.1,
-        far: 100,
+        far: 150,
       }}
       dpr={[1, 2]}
       gl={{ antialias: true }}
@@ -48,10 +72,20 @@ export function SolarSystemScene() {
       />
 
       <Suspense fallback={<LoadingFallback />}>
-        <Planet
-          body={featuredBody}
-          visualScale={FEATURED_BODY_DISPLAY_RADIUS / featuredBody.radiusKm}
-        />
+        <group>
+          {orbitingBodies.map(({ body, orbitRadius }) => (
+            <OrbitLine key={body.id} radius={orbitRadius} />
+          ))}
+
+          {sceneBodies.map(({ body, displayRadius, position }) => (
+            <Planet
+              key={body.id}
+              body={body}
+              displayRadius={displayRadius}
+              position={position}
+            />
+          ))}
+        </group>
       </Suspense>
 
       <OrbitControls
@@ -59,8 +93,8 @@ export function SolarSystemScene() {
         enableDamping
         dampingFactor={0.06}
         enablePan={false}
-        minDistance={3}
-        maxDistance={7}
+        minDistance={8}
+        maxDistance={50}
       />
     </Canvas>
   );
