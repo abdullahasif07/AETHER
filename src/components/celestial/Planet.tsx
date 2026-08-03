@@ -21,16 +21,21 @@ function PlanetMaterial({ body }: PlanetMaterialProps) {
   const texture = useTextureAsset(body.textureUrl);
   const isStar = body.kind === "star";
 
+  if (isStar) {
+    return (
+      <meshBasicMaterial
+        map={texture}
+        color={texture ? "#ffffff" : body.color}
+        toneMapped={false}
+      />
+    );
+  }
+
   return (
-    <meshStandardMaterial
+    <meshLambertMaterial
       map={texture}
       color={texture ? "#ffffff" : body.color}
-      emissive={isStar ? body.color : "#000000"}
-      emissiveMap={isStar ? texture : null}
-      emissiveIntensity={isStar ? 1.8 : 0}
-      toneMapped={!isStar}
-      roughness={0.82}
-      metalness={0.02}
+      emissive="#080808"
     />
   );
 }

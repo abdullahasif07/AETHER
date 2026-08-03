@@ -5,8 +5,8 @@ export const DISTANCE_SCALE_CONFIG = Object.freeze({
 });
 
 export const SIZE_SCALE_CONFIG = Object.freeze({
-  minimumBodyRadiusSceneUnits: 0.12,
-  logarithmicGrowthSceneUnits: 0.35,
+  minimumBodyRadiusSceneUnits: 0.35,
+  logarithmicGrowthSceneUnits: 0.6,
   referenceRadiusKm: 1_000,
 });
 

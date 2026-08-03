@@ -59,16 +59,16 @@ export function SolarSystemScene() {
     >
       <color attach="background" args={["#020308"]} />
 
-      <ambientLight intensity={0.2} />
+      <ambientLight intensity={0.3} />
       <directionalLight
         position={[3, 2, 4]}
-        color="#f4f1df"
-        intensity={2.4}
+        color="#fff8e8"
+        intensity={1.15}
       />
       <pointLight
         position={[-3, -1, -2]}
         color="#5f82a8"
-        intensity={0.55}
+        intensity={0.2}
       />
 
       <Suspense fallback={<LoadingFallback />}>
