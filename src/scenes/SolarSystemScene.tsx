@@ -1,6 +1,7 @@
 import { Html, OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Suspense, useRef } from "react";
+import * as THREE from "three";
 import { OrbitLine } from "../components/celestial/OrbitLine";
 import { Planet } from "../components/celestial/Planet";
 import { celestialBodies } from "../data/celestialBodies";
@@ -8,6 +9,8 @@ import {
   scaleDistanceKmToSceneUnits,
   scaleRadiusKmToSceneUnits,
 } from "../lib/scale";
+import { getOrbitalRevolutionDeltaRadians } from "../lib/simulation";
+import { useSimulationStore } from "../store/simulationStore";
 
 const ORBIT_START_ANGLE_RADIANS = 0.35;
 const ORBIT_ANGLE_STEP_RADIANS = Math.PI * (3 - Math.sqrt(5));
@@ -34,6 +37,42 @@ const sceneBodies = celestialBodies.map((body) => {
 });
 
 const orbitingBodies = sceneBodies.filter(({ orbitRadius }) => orbitRadius > 0);
+
+interface AnimatedBodyProps {
+  sceneBody: (typeof sceneBodies)[number];
+}
+
+function AnimatedBody({ sceneBody }: AnimatedBodyProps) {
+  const orbitRef = useRef<THREE.Group>(null);
+  const { body, displayRadius, orbitRadius } = sceneBody;
+
+  useFrame((_, delta) => {
+    if (!orbitRef.current || orbitRadius === 0) {
+      return;
+    }
+
+    orbitRef.current.rotation.y += getOrbitalRevolutionDeltaRadians(
+      body.orbitalPeriodDays,
+      delta,
+      useSimulationStore.getState().timeScale,
+    );
+  });
+
+  const initialOrbitRotation = Math.atan2(
+    -sceneBody.position[2],
+    sceneBody.position[0],
+  );
+
+  return (
+    <group ref={orbitRef} rotation={[0, initialOrbitRotation, 0]}>
+      <Planet
+        body={body}
+        displayRadius={displayRadius}
+        position={[orbitRadius, 0, 0]}
+      />
+    </group>
+  );
+}
 
 function LoadingFallback() {
   return (
@@ -77,13 +116,8 @@ export function SolarSystemScene() {
             <OrbitLine key={body.id} radius={orbitRadius} />
           ))}
 
-          {sceneBodies.map(({ body, displayRadius, position }) => (
-            <Planet
-              key={body.id}
-              body={body}
-              displayRadius={displayRadius}
-              position={position}
-            />
+          {sceneBodies.map((sceneBody) => (
+            <AnimatedBody key={sceneBody.body.id} sceneBody={sceneBody} />
           ))}
         </group>
       </Suspense>

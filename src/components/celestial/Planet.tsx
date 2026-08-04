@@ -2,10 +2,10 @@ import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 import type { CelestialBody } from "../../data/celestialBodies";
+import { getAxialRotationDeltaRadians } from "../../lib/simulation";
+import { useSimulationStore } from "../../store/simulationStore";
 import { PlanetRings } from "./PlanetRings";
 import { useTextureAsset } from "./useTextureAsset";
-
-const DISPLAY_ROTATION_SPEED_RADIANS_PER_SECOND = 0.12;
 
 interface PlanetProps {
   body: CelestialBody;
@@ -49,8 +49,11 @@ export function Planet({
 
   useFrame((_, delta) => {
     if (planetRef.current) {
-      planetRef.current.rotation.y +=
-        DISPLAY_ROTATION_SPEED_RADIANS_PER_SECOND * delta;
+      planetRef.current.rotation.y += getAxialRotationDeltaRadians(
+        body.rotationPeriodHours,
+        delta,
+        useSimulationStore.getState().timeScale,
+      );
     }
   });
 

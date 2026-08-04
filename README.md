@@ -56,3 +56,14 @@ Scientific distances and radii use separate logarithmic display mappings in
 mean radii in kilometres map independently to readable body radii. These
 display values are intentionally non-linear and are not a realistic scale
 conversion.
+
+## Simulation time
+
+At the default `1×` time scale, one real second advances the simulation by
+`0.25` Earth days. The global control ranges from paused (`0×`) to `4×`.
+Axial rotation uses each body's `rotationPeriodHours`; negative values rotate
+in the opposite direction to represent retrograde rotation. Orbital revolution
+uses positive `orbitalPeriodDays`, while the Sun and any body with a missing or
+invalid orbital period remain stationary. Animation mutates Three.js objects
+inside React Three Fiber's frame loop, so elapsed simulation time does not
+cause React rerenders.
