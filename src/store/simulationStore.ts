@@ -10,6 +10,7 @@ export const TIME_SCALE_CONFIG = Object.freeze({
 interface SimulationState {
   timeScale: number;
   setTimeScale: (timeScale: number) => void;
+  resetTimeScale: () => void;
 }
 
 function clampTimeScale(timeScale: number): number {
@@ -26,4 +27,5 @@ function clampTimeScale(timeScale: number): number {
 export const useSimulationStore = create<SimulationState>((set) => ({
   timeScale: TIME_SCALE_CONFIG.default,
   setTimeScale: (timeScale) => set({ timeScale: clampTimeScale(timeScale) }),
+  resetTimeScale: () => set({ timeScale: TIME_SCALE_CONFIG.default }),
 }));

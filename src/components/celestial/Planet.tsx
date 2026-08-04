@@ -2,7 +2,10 @@ import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 import type { CelestialBody } from "../../data/celestialBodies";
-import { getAxialRotationDeltaRadians } from "../../lib/simulation";
+import {
+  getAxialRotationDeltaRadians,
+  normalizeAngleRadians,
+} from "../../lib/simulation";
 import { useSimulationStore } from "../../store/simulationStore";
 import { PlanetRings } from "./PlanetRings";
 import { useTextureAsset } from "./useTextureAsset";
@@ -48,13 +51,23 @@ export function Planet({
   const planetRef = useRef<THREE.Mesh>(null);
 
   useFrame((_, delta) => {
-    if (planetRef.current) {
-      planetRef.current.rotation.y += getAxialRotationDeltaRadians(
-        body.rotationPeriodHours,
-        delta,
-        useSimulationStore.getState().timeScale,
-      );
+    if (!planetRef.current) {
+      return;
     }
+
+    const rotationDelta = getAxialRotationDeltaRadians(
+      body.rotationPeriodHours,
+      delta,
+      useSimulationStore.getState().timeScale,
+    );
+
+    if (rotationDelta === 0) {
+      return;
+    }
+
+    planetRef.current.rotation.y = normalizeAngleRadians(
+      planetRef.current.rotation.y + rotationDelta,
+    );
   });
 
   return (

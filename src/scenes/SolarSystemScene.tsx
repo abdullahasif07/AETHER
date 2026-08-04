@@ -9,7 +9,10 @@ import {
   scaleDistanceKmToSceneUnits,
   scaleRadiusKmToSceneUnits,
 } from "../lib/scale";
-import { getOrbitalRevolutionDeltaRadians } from "../lib/simulation";
+import {
+  getOrbitalRevolutionDeltaRadians,
+  normalizeAngleRadians,
+} from "../lib/simulation";
 import { useSimulationStore } from "../store/simulationStore";
 
 const ORBIT_START_ANGLE_RADIANS = 0.35;
@@ -51,10 +54,18 @@ function AnimatedBody({ sceneBody }: AnimatedBodyProps) {
       return;
     }
 
-    orbitRef.current.rotation.y += getOrbitalRevolutionDeltaRadians(
+    const revolutionDelta = getOrbitalRevolutionDeltaRadians(
       body.orbitalPeriodDays,
       delta,
       useSimulationStore.getState().timeScale,
+    );
+
+    if (revolutionDelta === 0) {
+      return;
+    }
+
+    orbitRef.current.rotation.y = normalizeAngleRadians(
+      orbitRef.current.rotation.y + revolutionDelta,
     );
   });
 

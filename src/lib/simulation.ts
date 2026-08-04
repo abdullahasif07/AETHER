@@ -5,6 +5,19 @@ export const SIMULATION_TIME_CONFIG = Object.freeze({
   maximumFrameDeltaSeconds: 0.1,
 });
 
+/** Keeps long-running Three.js Euler angles within one complete turn. */
+export function normalizeAngleRadians(angleRadians: number): number {
+  if (!Number.isFinite(angleRadians)) {
+    return 0;
+  }
+
+  const normalizedAngle = angleRadians % FULL_ROTATION_RADIANS;
+
+  return normalizedAngle < 0
+    ? normalizedAngle + FULL_ROTATION_RADIANS
+    : normalizedAngle;
+}
+
 function getSimulatedDayDelta(
   realDeltaSeconds: number,
   timeScale: number,
