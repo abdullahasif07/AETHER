@@ -1,44 +1,26 @@
-import { useEffect, useState } from "react";
+import { useTexture } from "@react-three/drei";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
-export function useTextureAsset(textureUrl: string | null) {
-  const [loadedAsset, setLoadedAsset] = useState<{
-    texture: THREE.Texture;
-    url: string;
-  } | null>(null);
+export function preloadTextureAsset(textureUrl: string) {
+  useTexture.preload(textureUrl);
+}
 
-  useEffect(() => {
-    if (!textureUrl) {
-      return;
-    }
+export function useTextureAsset(textureUrl: string) {
+  const cachedTexture = useTexture(textureUrl);
+  const texture = useMemo(() => {
+    const configuredTexture = cachedTexture.clone();
 
-    let isCurrent = true;
-    const loadedTexture = new THREE.TextureLoader().load(
-      textureUrl,
-      (nextTexture) => {
-        nextTexture.colorSpace = THREE.SRGBColorSpace;
-        nextTexture.wrapS = THREE.RepeatWrapping;
-        nextTexture.wrapT = THREE.ClampToEdgeWrapping;
-        nextTexture.anisotropy = 4;
-        nextTexture.needsUpdate = true;
+    configuredTexture.colorSpace = THREE.SRGBColorSpace;
+    configuredTexture.wrapS = THREE.RepeatWrapping;
+    configuredTexture.wrapT = THREE.ClampToEdgeWrapping;
+    configuredTexture.anisotropy = 4;
+    configuredTexture.needsUpdate = true;
 
-        if (isCurrent) {
-          setLoadedAsset({ texture: nextTexture, url: textureUrl });
-        }
-      },
-      undefined,
-      () => {
-        if (isCurrent) {
-          setLoadedAsset(null);
-        }
-      },
-    );
+    return configuredTexture;
+  }, [cachedTexture]);
 
-    return () => {
-      isCurrent = false;
-      loadedTexture.dispose();
-    };
-  }, [textureUrl]);
+  useEffect(() => () => texture.dispose(), [texture]);
 
-  return loadedAsset?.url === textureUrl ? loadedAsset.texture : null;
+  return texture;
 }

@@ -8,6 +8,7 @@ import {
 } from "../../lib/simulation";
 import { useSimulationStore } from "../../store/simulationStore";
 import { PlanetRings } from "./PlanetRings";
+import { TextureErrorBoundary } from "./TextureErrorBoundary";
 import { useTextureAsset } from "./useTextureAsset";
 
 interface PlanetProps {
@@ -16,30 +17,48 @@ interface PlanetProps {
   position?: ThreeElements["mesh"]["position"];
 }
 
-interface PlanetMaterialProps {
+interface BodyMaterialProps {
   body: CelestialBody;
 }
 
-function PlanetMaterial({ body }: PlanetMaterialProps) {
-  const texture = useTextureAsset(body.textureUrl);
+function FallbackBodyMaterial({ body }: BodyMaterialProps) {
   const isStar = body.kind === "star";
 
   if (isStar) {
-    return (
-      <meshBasicMaterial
-        map={texture}
-        color={texture ? "#ffffff" : body.color}
-        toneMapped={false}
-      />
-    );
+    return <meshBasicMaterial color={body.color} toneMapped={false} />;
   }
 
   return (
     <meshLambertMaterial
-      map={texture}
-      color={texture ? "#ffffff" : body.color}
+      color={body.color}
       emissive="#080808"
     />
+  );
+}
+
+interface TexturedBodyMaterialProps extends BodyMaterialProps {
+  textureUrl: string;
+}
+
+function TexturedBodyMaterial({ body, textureUrl }: TexturedBodyMaterialProps) {
+  const texture = useTextureAsset(textureUrl);
+
+  if (body.kind === "star") {
+    return <meshBasicMaterial map={texture} toneMapped={false} />;
+  }
+
+  return <meshLambertMaterial map={texture} emissive="#080808" />;
+}
+
+function PlanetMaterial({ body }: BodyMaterialProps) {
+  if (!body.textureUrl) {
+    return <FallbackBodyMaterial body={body} />;
+  }
+
+  return (
+    <TextureErrorBoundary fallback={<FallbackBodyMaterial body={body} />}>
+      <TexturedBodyMaterial body={body} textureUrl={body.textureUrl} />
+    </TextureErrorBoundary>
   );
 }
 
@@ -87,7 +106,9 @@ export function Planet({
       </mesh>
 
       {body.rings ? (
-        <PlanetRings bodyRadius={displayRadius} rings={body.rings} />
+        <TextureErrorBoundary fallback={null}>
+          <PlanetRings bodyRadius={displayRadius} rings={body.rings} />
+        </TextureErrorBoundary>
       ) : null}
     </group>
   );

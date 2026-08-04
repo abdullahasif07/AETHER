@@ -4,6 +4,7 @@ import { Suspense, useRef } from "react";
 import * as THREE from "three";
 import { OrbitLine } from "../components/celestial/OrbitLine";
 import { Planet } from "../components/celestial/Planet";
+import { preloadTextureAsset } from "../components/celestial/useTextureAsset";
 import { celestialBodies } from "../data/celestialBodies";
 import {
   scaleDistanceKmToSceneUnits,
@@ -40,6 +41,16 @@ const sceneBodies = celestialBodies.map((body) => {
 });
 
 const orbitingBodies = sceneBodies.filter(({ orbitRadius }) => orbitRadius > 0);
+
+for (const { body } of sceneBodies) {
+  if (body.textureUrl) {
+    preloadTextureAsset(body.textureUrl);
+  }
+
+  if (body.rings) {
+    preloadTextureAsset(body.rings.textureUrl);
+  }
+}
 
 interface AnimatedBodyProps {
   sceneBody: (typeof sceneBodies)[number];

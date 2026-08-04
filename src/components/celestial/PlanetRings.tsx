@@ -43,10 +43,6 @@ export function PlanetRings({ bodyRadius, rings }: PlanetRingsProps) {
     return ringGeometry;
   }, [innerRadius, outerRadius]);
 
-  if (!texture) {
-    return null;
-  }
-
   return (
     <mesh
       geometry={geometry}
