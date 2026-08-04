@@ -60,7 +60,7 @@ conversion.
 ## Simulation time
 
 At the default `1×` time scale, one real second advances the simulation by
-`0.25` Earth days. The global control ranges from paused (`0×`) to `4×`.
+`0.1` Earth days. The global control ranges from paused (`0×`) to `4×`.
 Axial rotation uses each body's `rotationPeriodHours`; negative values rotate
 in the opposite direction to represent retrograde rotation. Orbital revolution
 uses positive `orbitalPeriodDays`, while the Sun and any body with a missing or

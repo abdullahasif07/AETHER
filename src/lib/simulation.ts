@@ -1,7 +1,7 @@
 const FULL_ROTATION_RADIANS = Math.PI * 2;
 
 export const SIMULATION_TIME_CONFIG = Object.freeze({
-  simulatedDaysPerRealSecond: 0.25,
+  simulatedDaysPerRealSecond: 0.1,
   maximumFrameDeltaSeconds: 0.1,
 });
 
