@@ -6,6 +6,7 @@ import {
   getAxialRotationDeltaRadians,
   normalizeAngleRadians,
 } from "../../lib/simulation";
+import { useSelectionStore } from "../../store/selectionStore";
 import { useSimulationStore } from "../../store/simulationStore";
 import { PlanetRings } from "./PlanetRings";
 import { TextureErrorBoundary } from "./TextureErrorBoundary";
@@ -16,6 +17,8 @@ interface PlanetProps {
   displayRadius: number;
   position?: ThreeElements["mesh"]["position"];
 }
+
+const MAX_SELECTION_MOVEMENT_PIXELS = 2;
 
 interface BodyMaterialProps {
   body: CelestialBody;
@@ -90,7 +93,17 @@ export function Planet({
   });
 
   return (
-    <group position={position}>
+    <group
+      position={position}
+      onClick={(event) => {
+        if (event.delta > MAX_SELECTION_MOVEMENT_PIXELS) {
+          return;
+        }
+
+        event.stopPropagation();
+        useSelectionStore.getState().selectBody(body.id);
+      }}
+    >
       <mesh
         ref={planetRef}
         name={body.name}

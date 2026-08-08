@@ -14,6 +14,7 @@ import {
   getOrbitalRevolutionDeltaRadians,
   normalizeAngleRadians,
 } from "../lib/simulation";
+import { useSelectionStore } from "../store/selectionStore";
 import { useSimulationStore } from "../store/simulationStore";
 
 const ORBIT_START_ANGLE_RADIANS = 0.35;
@@ -117,6 +118,9 @@ export function SolarSystemScene() {
       }}
       dpr={[1, 2]}
       gl={{ antialias: true }}
+      onPointerMissed={() =>
+        useSelectionStore.getState().clearSelection()
+      }
     >
       <color attach="background" args={["#020308"]} />
 

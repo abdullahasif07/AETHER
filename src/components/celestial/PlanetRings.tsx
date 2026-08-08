@@ -47,7 +47,6 @@ export function PlanetRings({ bodyRadius, rings }: PlanetRingsProps) {
     <mesh
       geometry={geometry}
       rotation={[0, 0, tiltRadians]}
-      raycast={() => null}
     >
       <meshStandardMaterial
         map={texture}
